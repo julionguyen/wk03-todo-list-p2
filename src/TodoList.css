@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
+
+html {
+    background-color: #1c2025;
+    color: #acb3bc;
+    padding: 5px;
+}
+body {
+    width: 90%;
+    margin: auto;
+}
+button {
+    background-color: #102a43;
+    color: #aeee99;
+    min-width: 100px;
+    padding: 5px;
+    margin: 5px;
+}
+input {
+    background-color: #1c2025;
+    color: #acb3bc;
+}
+fieldset{
+    margin: 8px;
+    border: 1px solid #aeee99;
+    padding: 8px;
+    border-radius: 4px;
+    width: max-content;    
+}
+legend {
+    padding: 2px;
+    text-align: left;
+    color: #aeee99;
+}
+.todo_main {
+    border: 1px solid #aeee99;
+    width: max-content;
+    padding: 10px;
+    height: 100%;
+    margin: auto;
+}
+.todo_empty {    
+    background-color: #102a43;    
+}
+.main_job {
+    display: grid;
+    grid-auto-flow: row;
+}
+.page_title {
+    font-family: 'Dancing Script', cursive;
+    font-size: xx-large;
+    font-weight: bold;
+}
+.add_new_job {
+    display: grid;
+    width: max-content;
+    margin: auto;
+}
+.todo_list_main {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(360px,1fr));
+    width: 500px;
+    margin: auto;
+    padding: 5px;
+    row-gap: 5px;
+    background-color: #102a43;
+}
+.clear_jobs {
+    width: max-content;
+    margin: auto;
+}
+.search_job {    
+    display: grid;
+    width: max-content;
+    margin: auto;
+}
+
+@media only screen and (max-width: 626px) {
+    body {
+      background-color: #1c2025;
+      margin: auto;
+      width: 100%;
+    }
+}

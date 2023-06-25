@@ -1,0 +1,5 @@
+.todo_item {
+    display: grid;
+    background-color: #102a43;
+    grid-template-columns:max-content;
+}
