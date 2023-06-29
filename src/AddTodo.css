@@ -1,0 +1,6 @@
+.add_new_job {
+    display: grid;
+    width: max-content;
+    margin: auto;
+    padding: 5px;
+}

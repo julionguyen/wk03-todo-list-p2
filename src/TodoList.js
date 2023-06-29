@@ -1,35 +1,26 @@
 import { Component } from "react";
 import Todo from "./Todo"
 import "./TodoList.css"
-import { toHaveAccessibleDescription } from "@testing-library/jest-dom/matchers";
+import AddTodo from "./AddTodo";
 
 export default class TodoList extends Component {
     state = {
         todoList: [
-            {desc: "eat", urgent: false}, 
-            {desc: "sleep", urgent: false}, 
-            {desc: "do something new", urgent: true}, 
-            {desc: "eat again", urgent: false}, 
-            {desc: "sleep again", urgent: true}
+            {todo: "Buy more cat food", urgent: false, completed: true}, 
+            {todo: "Clean the bathroom", urgent: false, completed: false}, 
+            {todo: "Finish React homework", urgent: true, completed: true}, 
+            {todo: "Go out for dinner", urgent: false, completed: false}, 
+            {todo: "Finish assignment", urgent: true, completed: true}
         ],
-        jobDescription: '',
-        isUrgentJob: false,
         isShowUrgentOnly: false,
         txtSearch: ''        
     }
 
-    handleAddJob = event => {
-        let jobDescriptionSt = event.target.value
-        this.setState({
-            jobDescription: jobDescriptionSt
-        })
-    }
 
-    doAddJob = () => {
-        {this.state.jobDescription != '' && this.setState({
-            todoList: [...this.state.todoList, {desc: this.state.jobDescription, urgent: this.state.isUrgentJob}],
-            jobDescription: '',
-            isUrgentJob: false
+    doAddJob = (job) => {
+        
+        {job.todo != '' && this.setState({
+            todoList: [...this.state.todoList, {todo: job.todo, urgent: job.urgent, completed: job.completed}]
         })}
     }
 
@@ -47,6 +38,15 @@ export default class TodoList extends Component {
             todoList: this.state.todoList.slice(1)
         })
     }
+    
+    doClearCompletedJobs = () => {
+        let completedJobs = []
+        this.setState({
+            todoList: this.state.todoList.filter(completedJob => ! completedJob.completed)
+        })
+        
+    }
+
     handleSearchChange = event => {
         let txtSearchSt = event.target.value
         this.setState({
@@ -57,11 +57,12 @@ export default class TodoList extends Component {
     doSearch = () => {
 
         this.setState({
-            todoList: this.state.todoList.filter(job_search=>job_search.desc.toLocaleLowerCase().includes(this.state.txtSearch)),
+            todoList: this.state.todoList.filter(job_search=>job_search.todo.toLocaleLowerCase().includes(this.state.txtSearch)),
             txtSearch: ''
         })
         
     }
+
     handleUrgentOnly = event => {
         
         let isChecked = event.target.checked
@@ -71,37 +72,39 @@ export default class TodoList extends Component {
         
     }
 
-    handleUrgentJob = event => {
-        let isUrgentJobStatus = event.target.checked
+    handleJobCompletion = (indexToChangeCompletion) => {
+        
+        let completedJobs = []
+        
+        this.state.todoList.map((job,index) =>
+            index === indexToChangeCompletion 
+                ?
+                    <>                    
+                        {job.completed = ! job.completed}
+                        {completedJobs = [...completedJobs,job]}
+                    </> 
+                : completedJobs = [...completedJobs,job]
+        )
+        
         this.setState({
-            isUrgentJob: isUrgentJobStatus
+            todoList: completedJobs
         })
     }
+
     render () {
         
         return (
             <div className="todo_main">                
-                <div className="main_op">
+                <div className="main_job">
                     <h3 className="page_title">Todo List</h3>
-                    <div className="add_new_job">
-                        <fieldset>
-                            <legend>Add new job</legend>
-                            <input type="text" className="input_add" 
-                                onChange={this.handleAddJob}
-                                value={this.state.jobDescription}
-                            />
-                            <label><input type="checkbox" onChange={this.handleUrgentJob}></input>urgent</label>
-                            <button className="btn_add" onClick={this.doAddJob}>Add Job</button>
-                        </fieldset>
-                    </div>
+                    <AddTodo doAddJob={this.doAddJob} />
                     <div className="clear_jobs">
-                        <button className="btn_clear_all" onClick={this.doClearAll}>Clear All</button>
-                        <button className="btn_clear_first_job" onClick={this.doClearFirstJob}>Clear First Job</button>
-                        <label><input type="checkbox" className="input_urgent_only" 
-                                    onChange={this.handleUrgentOnly} 
-                                    checked={this.state.isShowUrgentOnly}
-                                />Show urgent only
-                        </label>
+                        <fieldset>
+                            <legend>Clear Jobs</legend>
+                            <button className="btn_clear_all" onClick={this.doClearAll}>All</button>
+                            <button className="btn_clear_first_job" onClick={this.doClearFirstJob}>First Job</button>
+                            <button className="btn_clear_completed_jobs" onClick={this.doClearCompletedJobs}>Completed Jobs</button>
+                        </fieldset>
                     </div>
                     <div className="search_job">
                         <fieldset>
@@ -109,12 +112,31 @@ export default class TodoList extends Component {
                             <input type="text" onChange={this.handleSearchChange} value={this.state.txtSearch}/>
                             <button onClick={this.doSearch}>Search</button>
                         </fieldset>
+                        <div className="show_urgent_only">
+                            <label><input type="checkbox" className="input_urgent_only" 
+                                            onChange={this.handleUrgentOnly} 
+                                            checked={this.state.isShowUrgentOnly}
+                                        />Show urgent only
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div className="todo_list_main">
                     {this.state.todoList.length < 1 ? <p className="todo_empty">Empty List</p> : 
-                    this.state.isShowUrgentOnly ? this.state.todoList.filter(jobs=>(jobs.urgent)).map((job,index)=> <Todo key={this.state.isShowUrgentOnly+index} desc={job.desc} urgent={job.urgent}/>) :
-                    this.state.todoList.sort((a,b)=>b.urgent-a.urgent).map((job,index) => <Todo key={this.state.isShowUrgentOnly+index} desc={job.desc} urgent={job.urgent}/>)}
+                    this.state.isShowUrgentOnly ? this.state.todoList.filter(jobs=>(jobs.urgent)).map((job,index)=> 
+                        <Todo key={index}
+                                todo={job.todo} 
+                                urgent={job.urgent}
+                                completed={job.completed}
+                                handleJobCompletion={()=>this.handleJobCompletion(index)}
+                        />) :
+                    this.state.todoList.sort((a,b)=>b.urgent-a.urgent).map((job,index) => 
+                        <Todo key={index} 
+                                todo={job.todo}
+                                urgent={job.urgent}
+                                completed={job.completed}
+                                handleJobCompletion={()=>this.handleJobCompletion(index)}
+                        />)}
                 </div>
                 
             </div>

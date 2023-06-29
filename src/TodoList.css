@@ -20,6 +20,9 @@ input {
     background-color: #1c2025;
     color: #acb3bc;
 }
+label {
+    color: #aeee99;
+}
 fieldset{
     margin: 8px;
     border: 1px solid #aeee99;
@@ -51,11 +54,6 @@ legend {
     font-size: xx-large;
     font-weight: bold;
 }
-.add_new_job {
-    display: grid;
-    width: max-content;
-    margin: auto;
-}
 .todo_list_main {
     display: grid;
     grid-template-columns: repeat(auto-fill,minmax(360px,1fr));
@@ -69,12 +67,18 @@ legend {
     width: max-content;
     margin: auto;
 }
+
 .search_job {    
     display: grid;
     width: max-content;
     margin: auto;
 }
-
+.show_urgent_only {
+    display: grid;
+    grid-auto-flow: column;
+    border: solid 1px #aeee99;
+    padding: 5px;
+}
 @media only screen and (max-width: 626px) {
     body {
       background-color: #1c2025;
